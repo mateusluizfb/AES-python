@@ -1,5 +1,6 @@
 from ben_ryan_key_expansion import keyExpansion
 from textwrap import wrap
+from mix_columns import mixColumn
 import numpy as np
 import codecs
 
@@ -27,20 +28,11 @@ def shift_rows(arg):
     return arg
 
 def mix_columns(matrix):
-    # https://www.angelfire.com/biz7/atleast/mix_columns.pdf
+    for i in range(4):
+        matrix[i] = mixColumn(matrix[i])
 
-    mix_columns_base_matrix = [
-        [2 , 3, 1, 1],
-        [1 , 2, 3, 1],
-        [1 , 1, 2, 3],
-        [3 , 1, 1, 2]
-    ]
-
-    # We need to multiply the mix_columns_base_matrix by each matrix's column.
-    # Be aware that the results for each multiplication MUST only have byte results, in other words, must be between:
-    # decimal: 0 and 255 | hex: 00 and FF | binary: 00000000 and 11111111
-
-    return matrix # array de arrays de bytes
+    print('Mixed: ', matrix)
+    return matrix
 
 def xor_key(key_round, plaintext):
     result = []
