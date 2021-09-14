@@ -1,5 +1,7 @@
 from copy import copy
 
+#Reference: https://asecuritysite.com/subjects/chapter88
+
 def galoisMult(a, b):
     p = 0
     hiBitSet = 0
