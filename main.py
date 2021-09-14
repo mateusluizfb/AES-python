@@ -40,6 +40,9 @@ def xor_key(key_round, plaintext):
     for i in range(4):
         y = i * 4
 
+        print(plaintext)
+        print(int(key_round[i], 16))
+        print(int.from_bytes(plaintext[y], 'big'))
         result.append(bytes([int(key_round[i], 16) ^ int.from_bytes(plaintext[y], 'big')]))
         result.append(bytes([int(key_round[i], 16) ^ int.from_bytes(plaintext[y + 1], 'big')]))
         result.append(bytes([int(key_round[i], 16) ^ int.from_bytes(plaintext[y + 2], 'big')]))
@@ -59,8 +62,7 @@ def encrypt(key, plaintext, rounds):
     for i in range(rounds):
         result = sub_bytes(result)
         result = shift_rows(result)
-        result = mix_columns(result)
-        # mix columns
+        # result = mix_columns(result)
         result = xor_key(key_expanded[i], np.array(result).flatten())
 
     result = sub_bytes(result)
@@ -71,13 +73,29 @@ def encrypt(key, plaintext, rounds):
 
 # We will receive chunks of 16 bytes to encrypt when reading the file:
 #
-# f = open("selfie.jpeg", "rb")
-# try:
-#     byte = f.read(1)
-#     while byte != "":
-#         # Do stuff with byte.
-#         byte = f.read(1)
-#         print(byte)
-# finally:
-#     f.close()
+
+KEY = "0f1571c947d9e8590cb7add6af7f6798"
+encrypted_file = []
+
+f = open("selfie.jpeg", "rb")
+while True:
+    chunk = f.read(16)
+    if chunk:
+        plaintext = [chunk[i:i+1] for i in range(0, len(chunk), 1)]
+
+        # Append zeros for stream with less then 16 bytes
+        if(len(plaintext) < 16):
+            how_many_zeros_to_add = 16 - len(plaintext)
+            for i in range(how_many_zeros_to_add):
+                plaintext.append(b'0')
+
+
+        encrypted_file.append(encrypt(KEY, plaintext, 1))
+    else:
+        break
+
+encrypted_byte_array = np.array(encrypted_file).flatten()
+
+# print(encrypted_byte_array)
+
 print(encrypt('0f1571c947d9e8590cb7add6af7f6798', [b'1', b'2', b'3', b'4', b'5', b'6', b'7', b'8',b'1', b'2', b'3', b'4', b'5', b'6', b'7', b'8'], 2))

@@ -121,25 +121,3 @@ def SubWord(word):
 
 	#return string
 	return ''.join(sWord)
-
-#used to display the keywords neatly in this form: w0 = 0f 15 71 c9
-def prettyPrint(w):
-	print("\n\nKeywords: \n")
-
-	for i in range(len(w)):
-		print("w" + str(i), "=", w[i][0], w[i][1], w[i][2], w[i][3])
-
-def main():
-	#hardcoding input key for demonstration purposes, could be read in from user/program via cmd/gui etc.
-	key = re.findall('..','0f1571c947d9e8590cb7add6af7f6798')
-
-	#expand key
-	w = keyExpansion(key)
-
-	#display nicely
-	print("Key provided: " + "".join(key))
-	prettyPrint(w)
-
-
-if __name__ == '__main__':
-	main()
