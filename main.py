@@ -68,6 +68,23 @@ def encrypt(key, plaintext, rounds):
 
     return result
 
+def decrypt(key, plaintext, rounds):
+    # key_expanded = key_expansion(key)
+    #
+    # result = xor_key(key_expanded[-1], np.array(result).flatten())
+    # result = revert_shift_rows(result)
+    # result = revert_sub_bytes(result)
+    #
+    # for i in range(rounds):
+    #     result = xor_key(key_expanded[i], np.array(result).flatten())
+    #     result = revert_shift_rows(result)
+    #     result = revert_sub_bytes(result)
+        # result = revert_mix_columns(result)
+
+    # result = xor_key(key_expanded[0], plaintext)
+    #
+    # return result
+
 # Start the script
 
 KEY = "0f1571c947d9e8590cb7add6af7f6798"
