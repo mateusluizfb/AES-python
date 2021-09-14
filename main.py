@@ -40,9 +40,6 @@ def xor_key(key_round, plaintext):
     for i in range(4):
         y = i * 4
 
-        print(plaintext)
-        print(int(key_round[i], 16))
-        print(int.from_bytes(plaintext[y], 'big'))
         result.append(bytes([int(key_round[i], 16) ^ int.from_bytes(plaintext[y], 'big')]))
         result.append(bytes([int(key_round[i], 16) ^ int.from_bytes(plaintext[y + 1], 'big')]))
         result.append(bytes([int(key_round[i], 16) ^ int.from_bytes(plaintext[y + 2], 'big')]))
@@ -71,8 +68,7 @@ def encrypt(key, plaintext, rounds):
 
     return result
 
-# We will receive chunks of 16 bytes to encrypt when reading the file:
-#
+# Start the script
 
 KEY = "0f1571c947d9e8590cb7add6af7f6798"
 encrypted_file = []
