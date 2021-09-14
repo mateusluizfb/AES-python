@@ -1,3 +1,5 @@
+from ben_ryan_key_expansion import keyExpansion
+from textwrap import wrap
 import numpy as np
 import codecs
 
@@ -40,12 +42,39 @@ def mix_columns(matrix):
 
     return matrix # array de arrays de bytes
 
-def encrypt(key, plaintext):
-    
-    result = None
-    result = sub_bytes(plaintext)
+def xor_key(key_round, plaintext):
+    result = []
+
+    for i in range(4):
+        y = i * 4
+
+        result.append(bytes([int(key_round[i], 16) ^ int.from_bytes(plaintext[y], 'big')]))
+        result.append(bytes([int(key_round[i], 16) ^ int.from_bytes(plaintext[y + 1], 'big')]))
+        result.append(bytes([int(key_round[i], 16) ^ int.from_bytes(plaintext[y + 2], 'big')]))
+        result.append(bytes([int(key_round[i], 16) ^ int.from_bytes(plaintext[y + 3], 'big')]))
+
+    return result
+
+
+def key_expansion(key):
+    return keyExpansion(wrap(key, 2))
+
+def encrypt(key, plaintext, rounds):
+    key_expanded = key_expansion(key)
+
+    result = xor_key(key_expanded[0], plaintext)
+
+    for i in range(rounds):
+        result = sub_bytes(result)
+        result = shift_rows(result)
+        result = mix_columns(result)
+        # mix columns
+        result = xor_key(key_expanded[i], np.array(result).flatten())
+
+    result = sub_bytes(result)
     result = shift_rows(result)
-    result = mix_columns(result)
+    result = xor_key(key_expanded[-1], np.array(result).flatten())
+
     return result
 
 # We will receive chunks of 16 bytes to encrypt when reading the file:
@@ -59,5 +88,4 @@ def encrypt(key, plaintext):
 #         print(byte)
 # finally:
 #     f.close()
-
-print(encrypt('key', [b'1', b'2', b'3', b'4', b'5', b'6', b'7', b'8',b'1', b'2', b'3', b'4', b'5', b'6', b'7', b'8']))
+print(encrypt('0f1571c947d9e8590cb7add6af7f6798', [b'1', b'2', b'3', b'4', b'5', b'6', b'7', b'8',b'1', b'2', b'3', b'4', b'5', b'6', b'7', b'8'], 2))
